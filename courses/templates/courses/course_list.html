@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Available Courses</h1>
+    <h3 class="mt-4">Enrollable Courses</h3>
+    <div class="row">
+        {% for course in enrollable_courses %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ course.image_url }}" class="card-img-top" alt="{{ course.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.name }}</h5>
+                        <p class="card-text">
+                            <strong>Instructor:</strong> {{ course.instructor }} <br>
+                            <strong>Duration:</strong> {{ course.duration }} <br>
+                            <strong>Rating:</strong> {{ course.rating }} ({{ course.reviews }} reviews)
+                        </p>
+                        <a href="{{ course.link }}" class="btn btn-primary" target="_blank">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p>No enrollable courses available at the moment.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Recommended Courses Section -->
+    <h3>Courses You Might Like</h3>
+    <div class="row mb-4">
+        {% for course in recommended_courses %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ course.image_url  }}" class="card-img-top" alt="{{ course.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.name }}</h5>
+                        <p class="card-text">
+                            <strong>Instructor:</strong> {{ course.instructor }} <br>
+                            <strong>Duration:</strong> {{ course.duration }} <br>
+                            <strong>Rating:</strong> {{ course.rating }} ({{ course.reviews }} reviews)
+                        </p>
+                        <a href="{{ course.link }}" class="btn btn-primary" target="_blank">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No recommendations available at the moment.</p>
+        {% endfor %}
+    </div>
+
+    
+    <h3 class="mt-4">Other Courses</h3>
+    <form method="get" class="mb-4">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+    <div class="row">
+        {% for course in other_courses %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ course.image_url }}" class="card-img-top" alt="{{ course.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.name }}</h5>
+                        <p class="card-text">
+                            <strong>Instructor:</strong> {{ course.instructor }} <br>
+                            <strong>Duration:</strong> {{ course.duration }} <br>
+                            <strong>Rating:</strong> {{ course.rating }} ({{ course.reviews }} reviews)
+                        </p>
+                        <a href="{{ course.link }}" class="btn btn-secondary" target="_blank">View Course</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p>No other courses available at the moment.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}
