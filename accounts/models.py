@@ -6,7 +6,7 @@ from django.dispatch import receiver
 class Profile(models.Model):
     name = models.CharField(max_length=100, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, help_text=False)
-    email = models.EmailField(blank=True)
+    email = models.EmailField(blank=True)  # Automatically set from User model
     degree_specialization = models.CharField(max_length=100, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
     certifications = models.TextField(blank=True)  # For storing certifications info
@@ -20,7 +20,7 @@ class Profile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        # Automatically set name and email from the User model
+        # Automatically set email from the User model
         self.email = self.user.email  # Use email from User model
         super().save(*args, **kwargs)
 

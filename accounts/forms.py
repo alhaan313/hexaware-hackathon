@@ -39,7 +39,6 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = [
             'name',
-            'user',
             'degree_specialization', 
             'phone_number', 
             'certifications', 
