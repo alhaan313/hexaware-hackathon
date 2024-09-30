@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Page</title>
+</head>
+<body>
+    <h1>Welcome, {{ profile.username }}!</h1>
+    
+    <h2>Your Progress</h2>
+    <ul>
+        {% for course in progress %}
+            <li>{{ course.course_name }} - Status: {{ course.status }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Ask Your Mentor (Gemini AI)</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="user_query">Enter your question:</label><br>
+        <textarea id="user_query" name="user_query" rows="4" cols="50" required></textarea><br>
+        <button type="submit">Get Help</button>
+    </form>
+
+    <h3>Your AI Mentor Feedback</h3>
+    <div>
+        {% if ai_feedback %}
+            {% if ai_feedback.error %}
+                <p>Error: {{ ai_feedback.error }}</p>
+            {% else %}
+                <p>{{ ai_feedback.text }}</p>  <!-- Adjust according to the actual structure of ai_feedback -->
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
