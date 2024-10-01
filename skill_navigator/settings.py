@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'skill_navigator.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydb',
+        'NAME': 'skill_v3',
         'USER': 'root',
         'PASSWORD': '12345',
         'HOST': 'localhost',
@@ -171,3 +171,4 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 
 LOGIN_REDIRECT_URL = '/home/'  # Redirects authenticated users to home page
+
