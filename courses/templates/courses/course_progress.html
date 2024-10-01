@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ course.name }}</h1>
+    <h2>Modules</h2>
+    <ul>
+        {% for module in course.modules.all %}
+            <li>
+                <strong>{{ module.title }}</strong>
+                <p>{{ module.content.documentation }}</p>  <!-- Display module documentation -->
+
+                <h3>Assignments</h3>
+                <ul>
+                    {% for assignment in module.assignment_set.all %}
+                        <li>
+                            {{ assignment.question }} - Due: {{ assignment.due_date }}
+                            {% if user.is_authenticated %}
+                                <form method="POST" action="{% url 'submit_assignment' assignment.id %}" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <textarea name="submission_text" placeholder="Your answer here"></textarea>
+                                    <input type="file" name="submission_file">
+                                    <button type="submit">Submit</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <h3>Tests</h3>
+                <ul>
+                    {% for test in module.test_set.all %}
+                        <li>
+                            {{ test.question }}
+                            {% if user.is_authenticated %}
+                                <form method="POST" action="{% url 'submit_test' test.id %}">
+                                    {% csrf_token %}
+                                    <input type="text" name="user_answer" placeholder="Your answer">
+                                    <button type="submit">Submit</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

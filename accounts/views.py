@@ -5,8 +5,13 @@ from .forms import UserRegistrationForm, UserUpdateForm, ProfileUpdateForm
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
-def home(request):
-    return HttpResponse('This is home')
+@login_required
+def redirect_to_home(request):
+    return redirect('logged_home')  # Redirect to the view named 'logged_home'
+
+@login_required
+def logged_home(request):
+    return render(request, 'accounts/home.html')
 
 # User registration
 def register(request):
@@ -17,17 +22,14 @@ def register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            return redirect('logged_home')  # Redirect to logged_home after successful registration
+            # login(request, user)
+            return redirect('login')  # Redirect to logged_home after successful registration
     else:
         form = UserRegistrationForm()
         
     return render(request, 'accounts/register.html', {'form': form})
 
 # Logged home view
-@login_required
-def logged_home(request):
-    return render(request, 'accounts/home.html')
 
 # User profile view and update
 @login_required

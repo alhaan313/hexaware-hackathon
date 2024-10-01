@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- take_test.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ module.title }} - Test</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Test for Module: {{ module.title }}</h2>
+        <form id="test-form" method="POST" action="{% url 'take_test' course_id module.id %}">
+            {% csrf_token %}
+
+            <div class="test-questions">
+                {% for question in test_questions %}
+                    <div class="question-box">
+                        <h4>Question {{ forloop.counter }}: {{ question.question }}</h4>
+                        <input type="text" name="answer_{{ question.id }}" placeholder="Your Answer" required>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Test</button>
+        </form>
+
+        <div id="feedback" style="display: none;">
+            <h3>Feedback:</h3>
+            <p id="feedback-message"></p>
+            <p id="score-message"></p> <!-- Added for score display -->
+        </div>
+
+
+    </div>
+    <div id="feedback" style="display: none;">
+        <h3>Feedback: </h3>
+        <p id="feedback-message"></p>
+        <p id="score-message"></p> <!-- For score display -->
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testForm = document.getElementById('test-form');
+        
+            testForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+        
+                const formData = new FormData(testForm);
+        
+                fetch(testForm.action, {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Display the feedback message and score
+                    const feedbackMessage = document.getElementById('feedback-message');
+                    const scoreMessage = document.getElementById('score-message');
+                    feedbackMessage.innerText = data.message; // Display feedback
+                    scoreMessage.innerText = `Your score: ${data.score.toFixed(2)}%`; // Display score
+                    document.getElementById('feedback').style.display = 'block'; // Show feedback section
+                })
+                .catch(error => console.error('Error submitting the test:', error));
+            });
+        });
+        </script>
+        
+</body>
+</html>
+{% endblock %}

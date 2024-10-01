@@ -15,6 +15,8 @@ class Profile(models.Model):
     linkedin_profile = models.URLField(blank=True)
     github_profile = models.URLField(blank=True)
     resume = models.FileField(upload_to='resumes/', blank=True)  # For storing resume files
+    enrolled_courses = models.ManyToManyField('courses.Course', through='courses.CourseProgress')  # Correct reference
+
 
     def __str__(self):
         return self.user.username

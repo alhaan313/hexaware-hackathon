@@ -1,0 +1,16 @@
+<!-- templates/courses/module_detail.html -->
+<h1>{{ module.title }}</h1>
+<p>{{ module.content }}</p>
+<h3>Assignment</h3>
+<p>{{ module.assignment }}</p>
+<h3>Test</h3>
+<p>{{ module.test }}</p>
+
+{% if progress.completed %}
+    <p>Module Completed!</p>
+{% else %}
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="complete_test">Mark as Complete</button>
+    </form>
+{% endif %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Submission Results</h1>
+
+    <h2>Assignments</h2>
+    <ul>
+        {% for submission in submissions %}
+            <li>
+                Assignment: {{ submission.assignment.question }} <br>
+                Submitted by: {{ submission.user.username }} <br>
+                Grade: {{ submission.grade }} <br>
+                Feedback: {{ submission.feedback }} <br>
+                {% if submission.submission_file %}
+                    <a href="{{ submission.submission_file.url }}">View Submitted File</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Test Results</h2>
+    <ul>
+        {% for response in test_responses %}
+            <li>
+                Test: {{ response.test.question }} <br>
+                Your Answer: {{ response.user_answer }} <br>
+                Correct: {{ response.is_correct }} <br>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,167 @@
+<!-- course_details.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+{% load filters %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Sidebar with Modules -->
+        <div class="col-md-3">
+            <div class="list-group">
+                {% if modules %}
+                    {% for module in modules %}
+                        <a href="#" class="list-group-item list-group-item-action module-link" data-module-id="{{ module.id }}">
+                            {{ module.title }}
+                            {% if user_progress|filter_by_module:module.id %}
+                                <span class="badge bg-success">Completed</span>
+                            {% endif %}
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <span class="text-muted">No modules available for this course.</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Main Content Area for Module -->
+        <div class="col-md-9">
+            <div id="module-content">
+                <h3>Select a module to view its content.</h3>
+            </div>
+            <div class="feedback-content">
+                {% if feedback %}
+                <div class="feedback">
+                    <h3>{{ feedback }}</h3>
+                    <p>Your score: {{ score }}%</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% if messages %}
+<div id="floating-message" style="position:fixed; top:10%; right:10%; background-color:#f8d7da; padding:15px; z-index:1000;">
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    <button onclick="this.parentElement.style.display='none';">OK</button>
+</div>
+{% endif %}
+
+<script>
+    // Update the JavaScript code
+document.addEventListener('DOMContentLoaded', function() {
+    const moduleLinks = document.querySelectorAll('.module-link');
+    const moduleContentDiv = document.getElementById('module-content');
+    const courseId = {{ course.id }}; // Ensure course.id is accessible in your template
+
+    moduleLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            const moduleId = this.getAttribute('data-module-id');
+
+            fetch(`/courses/module/content/${moduleId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    // Construct URLs using courseId and moduleId for the test
+                    const assignmentUrl = data.assignment_id ? `/courses/course_id=${courseId}/assignment_id=${data.assignment_id}/` : '#';
+                    const testUrl = `/courses/${courseId}/${moduleId}/`; // Updated URL format
+
+                    moduleContentDiv.innerHTML = `
+                        <h3>${data.title}</h3>
+                        <p>${data.documentation}</p>
+                        <div class="d-flex justify-content-between mt-4">
+                            ${data.assignment_id ? `<a href="${assignmentUrl}" class="btn btn-primary">Submit Assignment</a>` : '<span class="text-muted">No assignment available</span>'}
+                            <a href="${testUrl}" class="btn btn-success" onclick="loadTest(${courseId}, ${moduleId}); return false;">Take Test</a>
+                        </div>
+                    `;
+                })
+                .catch(error => console.error('Error fetching module content:', error));
+        });
+    });
+});
+
+// Function to load the test without changing the URL
+function loadTest(courseId, moduleId) {
+    fetch(`/courses/course_id=${courseId}/module_id=${moduleId}/`) // Ensure this URL points to the correct view
+        .then(response => response.text())
+        .then(html => {
+            const moduleContentDiv = document.getElementById('module-content');
+            moduleContentDiv.innerHTML = html; // Update the content area with the test HTML
+        })
+        .catch(error => console.error('Error loading test:', error));
+}
+
+// Update the form submission to handle it via AJAX
+function attachFormHandler() {
+    const form = document.querySelector('form'); // Update to select your form
+
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(form); // Create FormData from the form
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Add CSRF token if necessary
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show success message and score
+                const feedbackContentDiv = document.getElementById('feedback-content');
+                feedbackContentDiv.innerHTML = `
+                    <h3>${data.message}</h3>
+                    <p>Your score: ${data.score} out of ${data.total}</p>
+                    <a href="/courses/${courseId}/${moduleId}/" class="btn btn-primary">Back to Module</a>
+                `;
+            })
+            .catch(error => console.error('Error submitting test:', error));
+        });
+    }
+};
+
+
+    function submitAssignment(assignmentId) {
+        const form = document.querySelector(`#assignment-form-${assignmentId}`);
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Show floating message on success
+            document.getElementById('floating-message-content').innerText = 'Your assignment has been submitted for grading.';
+            document.getElementById('floating-message').style.display = 'block';
+
+            // Optionally, refresh or update the content here
+        })
+        .catch(error => console.error('Error submitting assignment:', error));
+    }
+
+    function submitTest(moduleId) {
+        const testForm = document.getElementById('test-form');
+        const formData = new FormData(testForm);
+
+        fetch(testForm.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display the feedback message in a floating window
+            document.getElementById('floating-message-content').innerText = `You have scored ${data.score.toFixed(2)}%!`;
+            document.getElementById('floating-message').style.display = 'block';
+        })
+        .catch(error => console.error('Error submitting the test:', error));
+    }
+
+</script>
+
+
+{% endblock %}

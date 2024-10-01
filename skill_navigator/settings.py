@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-gi9^*c_t4yda-q0iawkwskd)j=4j(47qbit^shj*zwbviutxvx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = []
 
 import os
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -138,3 +140,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# SESSION_EXPIRE_SECONDS = 300  # 300 seconds = 5 minutes
+
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+
+LOGIN_REDIRECT_URL = '/home/'  # Redirects authenticated users to home page

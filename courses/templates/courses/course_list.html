@@ -7,16 +7,25 @@
     <div class="row">
         {% for course in enrollable_courses %}
             <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ course.image_url }}" class="card-img-top" alt="{{ course.name }}">
+                <div class="card" style="height: 400px;">
+                    <img src="{{ course.img_url }}" style="height: 200px;" class="card-img-top" alt="{{ course.name }}">
                     <div class="card-body">
-                        <h5 class="card-title">{{ course.name }}</h5>
+                        <h5 class="card-title">{{ course.name|slice:":56" }}{% if course.name|length > 50 %}...{% endif %} </h5>
                         <p class="card-text">
                             <strong>Instructor:</strong> {{ course.instructor }} <br>
                             <strong>Duration:</strong> {{ course.duration }} <br>
-                            <strong>Rating:</strong> {{ course.rating }} ({{ course.reviews }} reviews)
                         </p>
-                        <a href="{{ course.link }}" class="btn btn-primary" target="_blank">Enroll Now</a>
+                         <!-- Check if the user is enrolled -->
+                         {% if not course.is_enrolled %}
+                         <!-- Enroll Button -->
+                         <form action="{% url 'enroll_in_course' course.id %}" method="post">
+                             {% csrf_token %}
+                             <button type="submit" class="btn btn-primary" style="width: 100%;">Enroll Now</button>
+                         </form>
+                        {% else %}
+                            <!-- Already Enrolled -->
+                            <button class="btn btn-secondary" disabled style="width: 100%;">Already Enrolled</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -32,16 +41,16 @@
     <div class="row mb-4">
         {% for course in recommended_courses %}
             <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ course.image_url  }}" class="card-img-top" alt="{{ course.name }}">
+                <div class="card" style="height: 430px;">
+                    <img src="{{ course.img_url }}" style="height: 200px;" class="card-img-top" alt="{{ course.name }}">
                     <div class="card-body">
-                        <h5 class="card-title">{{ course.name }}</h5>
+                        <h5 class="card-title">{{ course.name|slice:":56" }}{% if course.name|length > 50 %}...{% endif %} </h5>
                         <p class="card-text">
-                            <strong>Instructor:</strong> {{ course.instructor }} <br>
+                            <strong>Instructor:</strong> {{ course.instructor|slice:":25" }}{% if course.instructor|length > 25 %}...{% endif %} <br>
                             <strong>Duration:</strong> {{ course.duration }} <br>
                             <strong>Rating:</strong> {{ course.rating }} ({{ course.reviews }} reviews)
                         </p>
-                        <a href="{{ course.link }}" class="btn btn-primary" target="_blank">Enroll Now</a>
+                        <a href="{{ course.link }}" class="btn btn-primary btn-dark" style="width: 100%;" target="_blank">View Course</a>
                     </div>
                 </div>
             </div>
@@ -60,16 +69,16 @@
     <div class="row">
         {% for course in other_courses %}
             <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ course.image_url }}" class="card-img-top" alt="{{ course.name }}">
+                <div class="card" style="height: 430px;">
+                    <img src="{{ course.img_url }}" style="height: 200px;" class="card-img-top" alt="{{ course.name }}">
                     <div class="card-body">
-                        <h5 class="card-title">{{ course.name }}</h5>
+                        <h5 class="card-title">{{ course.name|slice:":56" }}{% if course.name|length > 50 %}...{% endif %} </h5>
                         <p class="card-text">
-                            <strong>Instructor:</strong> {{ course.instructor }} <br>
+                            <strong>Instructor:</strong> {{ course.instructor|slice:":25" }}{% if course.instructor|length > 25 %}...{% endif %} <br>
                             <strong>Duration:</strong> {{ course.duration }} <br>
                             <strong>Rating:</strong> {{ course.rating }} ({{ course.reviews }} reviews)
                         </p>
-                        <a href="{{ course.link }}" class="btn btn-secondary" target="_blank">View Course</a>
+                        <a href="{{ course.link }}" class="btn btn-secondary" style="width: 100%; margin-top: auto; margin-bottom: 2px;" target="_blank">View Course</a> <!-- Adjust margin as needed -->
                     </div>
                 </div>
             </div>

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Submit Assignment for {{ module.title }}</h1>
+    
+    <div class="card p-4">
+        <h5 class="card-title">Assignment Instructions</h5>
+        <p class="card-text">{{ assignment.question }}</p>
+        <h5 class="card-title">Due Date</h5>
+        <p class="card-text">{{ assignment.due_date }}</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="mt-4">
+        {% csrf_token %}
+        
+        <!-- Text Submission -->
+        <div class="form-group">
+            <label for="submission_text">Your Text Submission</label>
+            <textarea class="form-control" id="submission_text" name="submission_text" rows="5">{{ submission.submission_text }}</textarea>
+        </div>
+
+        <!-- File Upload -->
+        <div class="form-group mt-3">
+            <label for="submission_file">Upload File</label>
+            <input type="file" class="form-control" id="submission_file" name="submission_file">
+        </div>
+        
+        <!-- Code Submission -->
+        <div class="form-group mt-3">
+            <label for="submission_code">Code Submission</label>
+            <textarea class="form-control" id="submission_code" name="submission_code" rows="10">{{ submission.submission_code }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Submit Assignment</button>
+   
+{% endblock %}

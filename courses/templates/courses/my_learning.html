@@ -1,0 +1,13 @@
+<div class="container">
+    <h2>My Learning</h2>
+    <ul>
+        {% for progress in progress_data %}
+            <li>
+                {{ progress.course.name }} - {{ progress.progress }}% Complete
+                {% if progress.is_completed %}
+                    <span class="badge bg-success">Completed</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
