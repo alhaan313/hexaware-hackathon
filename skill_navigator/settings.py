@@ -27,13 +27,7 @@ SECRET_KEY = 'django-insecure-gi9^*c_t4yda-q0iawkwskd)j=4j(47qbit^shj*zwbviutxvx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
-
-ALLOWED_HOSTS = []
-=======
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
->>>>>>> 0450b32e3c90b87b2539b203d7a7cb592d15e9cf
-
 
 # Application definition
 
@@ -48,6 +42,7 @@ INSTALLED_APPS = [
     'courses',
     'rest_framework',  # Django REST framework
     'rest_framework_simplejwt',  # JWT authentication for REST
+    'api',
 ]
 
 MIDDLEWARE = [
