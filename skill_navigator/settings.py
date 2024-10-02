@@ -172,3 +172,4 @@ SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 
 LOGIN_REDIRECT_URL = '/home/'  # Redirects authenticated users to home page
 
+ 
