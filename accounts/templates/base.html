@@ -1,9 +1,12 @@
+<!-- base.html in accounts -->
+ {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Your Site Title</title>
+    <title>Skill App</title>
+    <link rel="icon" type="image/ico" href="{% static 'accounts/icons/test.ico' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body, html {
@@ -50,6 +53,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'course_list' %}">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_learning' %}">My Learning</a>
                     </li>
                 </ul>
                 <div class="navbar-nav">

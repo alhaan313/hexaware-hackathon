@@ -15,6 +15,9 @@ urlpatterns = [
     path('course_id=<int:course_id>/enroll/', views.enroll_in_course, name='enroll_in_course'),
     path('course_id=<int:course_id>/progress/', views.course_progress, name='course_progress'),
     
+
+    path('mylearning', views.my_learning, name='my_learning'),
+    
     # path('assignment/<int:assignment_id>/submit/', views.submit_assignment, name='submit_assignment'),
     # path('module/<int:module_id>/', views.module_content, name='module_content'),
     # path('module/<int:module_id>/test/', views.take_test, name='take_test'),

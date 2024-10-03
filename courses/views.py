@@ -35,11 +35,7 @@ def course_list(request):
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Course, Module, Content, Assignment, Submission, Test, UserTestResponse, CourseProgress
-
-from django.shortcuts import render, get_object_or_404
-from .models import Course, Module, CourseProgress
-
+from .models import Course, Module, Content, Assignment, Submission, Test, UserTestResponse, CourseProgress, Profile
 @login_required
 def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
@@ -110,11 +106,13 @@ def course_progress(request, course_id):
 
 
 def update_course_progress(user, module):
+    profile = Profile.objects.get(user=user)
+
     total_modules = Module.objects.filter(course=module.course).count()
     completed_tests = UserTestResponse.objects.filter(user=user, test__module__course=module.course, is_correct=True).count()
     
     progress_percentage = (completed_tests / total_modules) * 100
-    course_progress, created = CourseProgress.objects.get_or_create(user=user, course=module.course)
+    course_progress, created = CourseProgress.objects.get_or_create(user=user, module=module, course=module.course, profile=profile)
     course_progress.progress = progress_percentage
     course_progress.save()
 
@@ -183,10 +181,19 @@ def submit_test(request, module_id):
 from django.contrib import messages
 ### Test Logic
 
+import random
+
 @login_required
 def take_test(request, module_id, course_id):
     module = get_object_or_404(Module, id=module_id)
     test_questions = Test.objects.filter(module=module)
+
+    # Fetch wrong answers and attach to questions
+    for question in test_questions:
+        wrong_answers = question.wrong_answers  # Assuming wrong_answers is stored in a suitable format
+        options = [question.correct_answer] + list(wrong_answers)  # Combine correct and wrong answers
+        random.shuffle(options)  # Shuffle the answer options
+        question.options = options  # Attach the shuffled options to the question
 
     if request.method == 'POST':
         correct_answers = 0
@@ -201,10 +208,9 @@ def take_test(request, module_id, course_id):
                 is_correct=(user_answer == question.correct_answer)
             )
 
-        # Update progress if all answers are correct
+
         if correct_answers == len(test_questions):  # Check if all answers are correct
             update_course_progress(request.user, module)
- # Calculate score and feedback
         
         score_percentage = (correct_answers / len(test_questions)) * 100
         feedback_message = f"You scored {score_percentage:.2f}%!"

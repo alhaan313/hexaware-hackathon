@@ -15,8 +15,8 @@
             min-height: 100vh;  /* Full height for the wrapper */
         }
         .content {
-            padding: 20px;
-            padding-top: 70px;  /* Adjust for navbar height */
+            padding: 0px;
+            padding-top: 0px;  /* Adjust for navbar height */
             flex: 1;  /* This allows the content area to expand */
         }
         .profile-icon {
@@ -36,6 +36,7 @@
             background-color: #f8f9fa;
             padding: 10px 0;
         }
+        
     </style>
 </head>
 <body>
@@ -72,7 +73,7 @@
         </nav>
         
 
-        <div class="content">
+        <div class="content" style="padding-top: 0px; margin-top: 0px;">
             {% block content %}
             <!-- This is where child templates will insert their content -->
             {% endblock %}

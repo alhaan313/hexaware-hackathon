@@ -86,6 +86,8 @@ class Test(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
     question = models.TextField()
     correct_answer = models.CharField(max_length=255)
+    wrong_answers = models.JSONField(null=True)  # To store wrong answers as a list
+
 
     def __str__(self):
         return f"Test for {self.module.title}"

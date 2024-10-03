@@ -1,44 +1,43 @@
-{% extends 'base.html' %}
-{% block content %}
-<!-- take_test.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ module.title }} - Test</title>
-</head>
-<body>
-    <div class="container">
-        <h2>Test for Module: {{ module.title }}</h2>
-        <form id="test-form" method="POST" action="{% url 'take_test' course_id module.id %}">
-            {% csrf_token %}
-
-            <div class="test-questions">
-                {% for question in test_questions %}
-                    <div class="question-box">
-                        <h4>Question {{ forloop.counter }}: {{ question.question }}</h4>
-                        <input type="text" name="answer_{{ question.id }}" placeholder="Your Answer" required>
+    <div class="container" style="margin-top: 0px !important;">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Test for Module: {{ module.title }}</h2>
+                <form id="test-form" method="POST" action="{% url 'take_test' course_id module.id %}">
+                    {% csrf_token %}
+                    <div class="test-questions">
+                        {% for question in test_questions %}
+                            <div class="mb-4 p-3 border rounded question-box">
+                                <h5 class="mb-3">Question {{ forloop.counter }}:</h5>
+                                <p>{{ question.question }}</p>
+                
+                                <!-- Multiple choice options -->
+                                {% for option in question.options %}
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="answer_{{ question.id }}" value="{{ option }}" required>
+                                        <label class="form-check-label">{{ option }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg mt-4">Submit Test</button>
+                    </div>
+                </form>
+                
+                
+
+                <div id="feedback" class="mt-5 alert alert-info" style="display: none;">
+                    <h4>Feedback:</h4>
+                    <p id="feedback-message"></p>
+                    <p id="score-message"></p> <!-- Added for score display -->
+                </div>
             </div>
-
-            <button type="submit" class="submit-btn">Submit Test</button>
-        </form>
-
-        <div id="feedback" style="display: none;">
-            <h3>Feedback:</h3>
-            <p id="feedback-message"></p>
-            <p id="score-message"></p> <!-- Added for score display -->
         </div>
-
-
     </div>
-    <div id="feedback" style="display: none;">
-        <h3>Feedback: </h3>
-        <p id="feedback-message"></p>
-        <p id="score-message"></p> <!-- For score display -->
-    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const testForm = document.getElementById('test-form');
@@ -64,8 +63,4 @@
                 .catch(error => console.error('Error submitting the test:', error));
             });
         });
-        </script>
-        
-</body>
-</html>
-{% endblock %}
+    </script>
